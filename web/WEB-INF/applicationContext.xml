@@ -2,22 +2,29 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
    http://www.springframework.org/schema/context
    http://www.springframework.org/schema/context/spring-context.xsd
    http://www.springframework.org/schema/mvc
-   http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-
-    <bean name="AccountServiceImpl" class="service.AccountServiceImpl">
+   http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <!--<import resource="classpath:WEB-INF/shiro-context.xml" />-->
+    <!--<bean name="loginController" class="controller.loginController">
+        <property name="accountService" ref="accountService" />
+    </bean>-->
+    <bean name="accountService" class="service.AccountServiceImpl">
+        <property name="dao" ref="BaseDaoIml" />
+    </bean>
+    <bean name="registerService" class="service.RegisterServiceImpl">
         <property name="dao" ref="BaseDaoIml" />
     </bean>
     <bean name="BaseDaoIml" class="dao.BaseDaoIml">
-        <property name="sessionFactory" ref="sf" />
+        <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-    <bean name="sf" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    <bean name="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="ds" />
         <property name="mappingResources">
             <list>
@@ -32,7 +39,15 @@
             </value>
         </property>
     </bean>
-    <bean name="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+
+
+  <!--  &lt;!&ndash; 管理事务的类&ndash;&gt;
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="ds"/>
+        <property name="enforceReadOnly" value="false"/>
+    </bean>-->
+
+<bean name="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
         <property name="url" value="jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8" />
         <property name="username" value="root" />

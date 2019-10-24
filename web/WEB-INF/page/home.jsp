@@ -5,10 +5,16 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=GB18030">
     <title>home</title>
+    <%@ include file="/WEB-INF/commo/taglibs.jsp"%>
 </head>
 <body>
 
 <h1>success</h1>
-${message}
+<form action="${basePath}shiro/jump">
+    <button type="submit">jump</button>
+</form>
+<form action="${basePath}shiro/jump">
+    <button type="submit">jump</button>
+</form>
 </body>
 </html>

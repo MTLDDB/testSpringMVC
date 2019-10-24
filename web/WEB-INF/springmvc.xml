@@ -16,12 +16,16 @@
             </props>
         </property>
     </bean>
-    <bean id="indexController" class="controller.IndexController"></bean>
-    <bean id="testNController" class="controller.testNController"></bean><!--非注解-->
-    <bean id="loginController" class="controller.LoginController"></bean>
+    <bean id="indexController" class="controller.loginController.IndexController"></bean>
+    <bean id="testNController" class="controller.loginController.testNController"></bean><!--非注解-->
+    <bean id="loginController" class="controller.loginController.LoginController">
+        <!--<property name="accountService" ref="accountService" />-->
+    </bean>
 
     <mvc:annotation-driven />
-    <context:component-scan base-package="controller"></context:component-scan><!--注解方式-->
+    <context:component-scan base-package="controller.loginController"></context:component-scan><!--注解方式-->
+    <context:component-scan base-package="controller.registerController"></context:component-scan>
+
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/page/"></property>
         <property name="suffix" value=".jsp"></property>

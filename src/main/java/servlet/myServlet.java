@@ -1,6 +1,6 @@
 package servlet;
 
-import controller.LoginController;
+import controller.loginController.LoginController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
