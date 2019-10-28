@@ -6,6 +6,7 @@ import model.Permission;
 import model.Role;
 import model.User;
 import model.UserRole;
+import org.springframework.stereotype.Service;
 
 public class RegisterServiceImpl implements RegisterService {
     private BaseDao dao;

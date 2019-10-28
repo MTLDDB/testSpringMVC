@@ -16,9 +16,10 @@ import service.AccountService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 
-    @Controller
+@Controller
     @RequestMapping(value = "shiro")
     public class ShiroController {
         // 处理用户业务类
@@ -60,7 +61,9 @@ import java.util.List;
     }
 */
         @RequestMapping(value = "login")
-        public ModelAndView login(@RequestParam("username") String username, @RequestParam("password") String password) {
+        public ModelAndView login(@RequestParam("username") String username, @RequestParam("password") String passwordOld) {
+            String password=UUID.nameUUIDFromBytes(passwordOld.getBytes()).toString().replace("-","");
+            System.out.println(password);
             UsernamePasswordToken token = new UsernamePasswordToken(username, password);
             Subject subject = SecurityUtils.getSubject();
             try {

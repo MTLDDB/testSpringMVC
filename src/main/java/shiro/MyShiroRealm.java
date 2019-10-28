@@ -51,7 +51,9 @@ public class MyShiroRealm extends AuthorizingRealm {
         String username = token.getUsername();
         if (username != null && !"".equals(username)) {
             List<User> users = accountService.getUserByUserName(username);
+
             if (users != null&&users.size()!=0) {
+                System.out.println(users.get(0).getName());
                 return new SimpleAuthenticationInfo(users.get(0).getName(), users.get(0).getPassword(), getName());
             }
         }

@@ -1,56 +1,81 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-   http://www.springframework.org/schema/context
-   http://www.springframework.org/schema/context/spring-context.xsd
-   http://www.springframework.org/schema/mvc
-   http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
     <!--<import resource="classpath:WEB-INF/shiro-context.xml" />-->
-    <!--<bean name="loginController" class="controller.loginController">
-        <property name="accountService" ref="accountService" />
-    </bean>-->
+   <!-- <context:component-scan base-package="model"/>-->
     <bean name="accountService" class="service.AccountServiceImpl">
-        <property name="dao" ref="BaseDaoIml" />
+        <property name="dao" ref="baseDaoIml" />
     </bean>
     <bean name="registerService" class="service.RegisterServiceImpl">
-        <property name="dao" ref="BaseDaoIml" />
+        <property name="dao" ref="baseDaoIml" />
     </bean>
-    <bean name="BaseDaoIml" class="dao.BaseDaoIml">
+    <bean name="baseDaoIml" class="dao.BaseDaoIml">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
-
     <bean name="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="ds" />
+        <property name="annotatedClasses">
+            <list>
+                <value>model.Role</value>
+                <value>model.UserRole</value>
+                <value>model.Permission</value><!--注释方式-->
+                <value>model.User</value>
+            </list>
+        </property>
         <property name="mappingResources">
             <list>
-                <value>User.hbm.xml</value>
+                <value>TUser.hbm.xml</value><!--配置文件方式-->
+                <value>TPassport.hbm.xml</value>
             </list>
         </property>
         <property name="hibernateProperties">
             <value>
-                hibernate.dialect=org.hibernate.dialect.MySQLDialect
-                hibernate.show_sql=true
+                <!-- 设置编码方式为utf-8 -->
+                hibernate.connection.characterEncoding=UTF-8
                 hibernate.hbm2ddl.auto=update
+                hibernate.dialect=org.hibernate.dialect.MySQL5InnoDBDialect
+                hibernate.show_sql=true
+
             </value>
         </property>
     </bean>
 
-
-  <!--  &lt;!&ndash; 管理事务的类&ndash;&gt;
-    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="ds"/>
-        <property name="enforceReadOnly" value="false"/>
-    </bean>-->
-
-<bean name="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <bean name="ds" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8" />
+        <property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8" />
         <property name="username" value="root" />
         <property name="password" value="123" />
     </bean>
+
+
+     <!-- 配置事务管理器（声明式的事务） -->
+ <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+     <property name="sessionFactory" ref="sessionFactory"></property>
+ </bean>
+
+ <tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <!-- <tx:attributes>
+         <tx:method name="add*" propagation="REQUIRED" rollback-for="Exception" />
+         <tx:method name="del*" propagation="REQUIRED" rollback-for="Exception"/>
+         <tx:method name="edit*" propagation="REQUIRED" rollback-for="Exception" />
+         <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+         <tx:method name="list*" propagation="REQUIRED" rollback-for="Exception"/>
+        &lt;!&ndash; <tx:method name="*" read-only="false"/>&ndash;&gt;
+     </tx:attributes>-->
+     <tx:attributes>
+         <!--<tx:method name="update*" propagation="REQUIRED"/>
+         <tx:method name="save*" propagation="REQUIRED"/>
+         <tx:method name="add*" propagation="REQUIRED"/>-->
+         <tx:method name="*" propagation="REQUIRED" rollback-for="Exception"/>
+     </tx:attributes>
+ </tx:advice>
+    <aop:config proxy-target-class="true">
+        <aop:pointcut id="daoMethod" expression="bean(baseDaoIml)"/><!--execution(* service.*.*(..))" />-->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="daoMethod"/>
+    </aop:config>
 </beans>

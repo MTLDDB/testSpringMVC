@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="model.one_to_one">
+    <class name="TUser" table="tt_user">
+        <id name="id" column="id">
+            <generator class="native">
+            </generator>
+        </id>
+        <property name="name" column="name"/>
+        <one-to-one name="passport" class="model.one_to_one.TPassport"
+                    cascade="all"
+                    outer-join="true"/>
+    </class>
+
+</hibernate-mapping>

@@ -23,6 +23,7 @@ public class BaseDaoIml extends HibernateTemplate implements BaseDao {
     }
 
     public void saveUser(User user) {
+        System.out.println(user.getPassword());
         save(user);
     }
 

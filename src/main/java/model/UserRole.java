@@ -12,10 +12,10 @@ public class UserRole {
     Integer id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "userId", unique = true)
+    @JoinColumn(name = "user_id", unique = true)
     User user;
     @ManyToOne
-    @JoinColumn(name = "roleId", unique = true)
+    @JoinColumn(name = "role_id", unique = true)
     Role role;
 
     public Integer getId() {

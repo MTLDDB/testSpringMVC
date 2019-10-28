@@ -13,11 +13,11 @@
 </head>
 <body>
 <form action="${basePath}register/form">
-    name    :<input type="text" id="name">
-    password:<input type="password" id="password">
-    role:<input type="text" id="role" value="用户">
-    description:<input type="text" id="description">
-    Permission_url:<input type="text" id="url" value="/test">
+    name    :<input type="text" name="name">
+    password:<input type="password" name="password">
+    role:<input type="text" name="role" value="用户">
+    description:<input type="text" name="description">
+    Permission_url:<input type="text" name="url" value="/test">
     <input type="submit" value="submit">
 </form>
 </body>
